@@ -347,7 +347,7 @@ def get_image_path(
 
 
 class HubotIntegration(Integration):
-    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-{}"
+    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-      {}"
     SECONDARY_LINE_TEXT = "(Hubot script)"
     DOC_PATH = "zerver/integrations/hubot_common.md"
 
@@ -569,6 +569,7 @@ WEBHOOK_INTEGRATIONS: list[WebhookIntegration] = [
     WebhookIntegration("statuspage", ["customer-support"]),
     WebhookIntegration("stripe", ["financial"]),
     WebhookIntegration("taiga", ["project-management"]),
+     WebhookIntegration("redmine", ["project-management"]),
     WebhookIntegration("teamcity", ["continuous-integration"]),
     WebhookIntegration("thinkst", ["monitoring"]),
     WebhookIntegration("transifex", ["misc"]),
@@ -603,7 +604,7 @@ INTEGRATIONS: dict[str, Integration] = {
     "notion": Integration("notion", ["productivity"]),
     "onyx": Integration("onyx", ["productivity"], logo="images/integrations/logos/onyx.png"),
     "puppet": Integration("puppet", ["deployment"]),
-    "redmine": Integration("redmine", ["project-management"]),
+    # "redmine": Integration("redmine", ["project-management"]), removed legacy plugin 
     "zoom": Integration("zoom", ["communication"]),
 }
 
@@ -716,6 +717,8 @@ WEBHOOK_SCREENSHOT_CONFIG: dict[str, list[WebhookScreenshotConfig]] = {
             "git_multiple.json", use_basic_auth=True, payload_as_query_param=True
         )
     ],
+    # sample payload
+    "redmine": [WebhookScreenshotConfig("issue_created.json")],
     # 'beeminder': [WebhookScreenshotConfig('derail_worried.json')],
     "bitbucket": [
         WebhookScreenshotConfig(
