@@ -44,6 +44,9 @@ export default defineConfig({
                 },
             }),
         ],
+        ssr: {
+            noExternal: ["zod"],
+        },
     },
     env: {
         schema: {
@@ -70,6 +73,7 @@ export default defineConfig({
     integrations: [
         starlight({
             title: "Zulip help center",
+            favicon: "../static/images/favicon.svg",
             components: {
                 Footer: "./src/components/Footer.astro",
                 Head: "./src/components/Head.astro",
@@ -435,6 +439,7 @@ export default defineConfig({
                         "message-retention-policy",
                         "digest-emails",
                         "disable-welcome-emails",
+                        "configure-a-custom-welcome-message",
                         "configure-automated-notices",
                         "configure-multi-language-search",
                         "analytics",

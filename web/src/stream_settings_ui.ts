@@ -31,6 +31,7 @@ import * as resize from "./resize.ts";
 import * as scroll_util from "./scroll_util.ts";
 import * as search_util from "./search_util.ts";
 import * as settings_banner from "./settings_banner.ts";
+import * as settings_components from "./settings_components.ts";
 import * as settings_config from "./settings_config.ts";
 import * as settings_data from "./settings_data.ts";
 import {type GroupSettingValue, current_user, realm} from "./state_data.ts";
@@ -263,6 +264,42 @@ export function update_channel_folder(sub: StreamSubscription, folder_id: number
     const section_id = stream_list_sort.current_section_id_for_stream(sub.stream_id);
     if (section_id !== undefined) {
         stream_list.maybe_hide_topic_bracket(section_id);
+    }
+}
+
+export function update_channel_folder_name(folder_id: number): void {
+    if (!overlays.streams_open()) {
+        return;
+    }
+
+    if ($("#subscription_overlay .nothing-selected").css("display") !== "none") {
+        return;
+    }
+
+    const active_stream_id = stream_settings_components.get_active_data().id;
+    if (!active_stream_id) {
+        const selected_folder_id = stream_create.get_channel_folder_dropdown_value();
+        if (selected_folder_id === folder_id) {
+            stream_create.set_channel_folder_dropdown_value(folder_id);
+        }
+        return;
+    }
+
+    const sub = sub_store.get(active_stream_id)!;
+    if (sub.folder_id === folder_id) {
+        settings_components.set_channel_folder_dropdown_value(sub);
+        return;
+    }
+
+    // Even if the channel opened in the right panel does not belong to
+    // the updated folder, user can be in process of changing the folder
+    // to which channel belongs and may have selected the updated folder
+    // without saving it yet.
+    const selected_folder_id = settings_components.get_dropdown_list_widget_setting_value(
+        $("#id_folder_id"),
+    );
+    if (selected_folder_id === folder_id) {
+        settings_components.set_dropdown_list_widget_setting_value("folder_id", selected_folder_id);
     }
 }
 
@@ -933,6 +970,8 @@ function setup_page(callback: () => void): void {
         initialize_components();
         redraw_left_panel();
         stream_create.set_up_handlers();
+
+        stream_ui_updates.set_folder_dropdown_visibility($("#stream-creation"));
 
         const throttled_redraw_left_panel = _.throttle(redraw_left_panel, 50);
         $("#stream_filter input[type='text']").on("input", () => {

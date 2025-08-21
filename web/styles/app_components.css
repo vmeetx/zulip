@@ -645,6 +645,10 @@ input.settings_text_input {
     opacity: var(--opacity-unread-mention-info);
 }
 
+.unread_mention_info.no-display {
+    display: none;
+}
+
 /* Implement the web app's default-hidden convention for alert
    elements.  Portico pages lack this CSS and thus show them by
    default. */
@@ -1069,7 +1073,7 @@ input.settings_text_input {
 
             [data-tippy-root] {
                 width: max-content;
-                word-wrap: unset;
+                overflow-wrap: unset;
             }
 
             .copy-overlay-message {

@@ -296,6 +296,7 @@ export function show_settings_for(node: HTMLElement): void {
     setup_group_setting_widgets(slim_sub);
     stream_ui_updates.update_can_subscribe_group_label($edit_container);
     stream_settings_components.set_up_folder_dropdown_widget(sub);
+    stream_ui_updates.set_folder_dropdown_visibility($("#stream_settings"));
 
     $("#channels_overlay_container").on(
         "click",

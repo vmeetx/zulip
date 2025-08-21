@@ -20,6 +20,7 @@ import * as message_edit from "./message_edit.ts";
 import * as message_lists from "./message_lists.ts";
 import * as message_store from "./message_store.ts";
 import * as message_view from "./message_view.ts";
+import * as mouse_drag from "./mouse_drag.ts";
 import * as narrow_state from "./narrow_state.ts";
 import * as navigate from "./navigate.ts";
 import {page_params} from "./page_params.ts";
@@ -427,6 +428,9 @@ export function initialize(): void {
                 return;
             }
             e.preventDefault();
+            if (document.getSelection()?.type === "Range") {
+                return;
+            }
             const row_id = get_row_id_for_narrowing(this);
             // TODO: Navigate user according to `web_channel_default_view` setting.
             // Also, update the tooltip hotkey in recipient bar.
@@ -439,6 +443,9 @@ export function initialize(): void {
             return;
         }
         e.preventDefault();
+        if (document.getSelection()?.type === "Range") {
+            return;
+        }
         const row_id = get_row_id_for_narrowing(this);
         message_view.narrow_by_topic(row_id, {trigger: "message header"});
     });
@@ -460,6 +467,12 @@ export function initialize(): void {
             return;
         }
         if ($(e.target).parents(".user-profile-picture").length === 1) {
+            return;
+        }
+        if (document.getSelection()?.type === "Range") {
+            // To avoid the click behavior if a user name or status text is
+            // selected.
+            e.preventDefault();
             return;
         }
 
@@ -927,10 +940,18 @@ export function initialize(): void {
         }
 
         if (compose_state.composing() && $(e.target).parents("#compose").length === 0) {
+            const should_prevent_click_behavior = mouse_drag.is_drag(e);
             if (
-                $(e.target).closest("a").length > 0 ||
+                should_prevent_click_behavior ||
                 $(e.target).closest(".copy_codeblock").length > 0
             ) {
+                // We want to avoid blurring a selected link by triggering a
+                // focus event on the compose textarea.
+                if (should_prevent_click_behavior) {
+                    // To avoid the click behavior if a link is selected.
+                    e.preventDefault();
+                    return;
+                }
                 // Refocus compose message text box if one clicks an external
                 // link/url to view something else while composing a message.
                 // See issue #4331 for more details.

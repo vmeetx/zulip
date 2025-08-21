@@ -1622,7 +1622,7 @@ Output:
     def create_channel_via_post(
         self,
         user: UserProfile,
-        subscribers: list[str] | list[int] | None = None,
+        subscribers: list[int] | None = None,
         name: str | None = None,
         extra_post_data: Mapping[str, Any] = {},
         invite_only: bool = False,
@@ -2775,6 +2775,7 @@ class PushNotificationTestCase(BouncerTestCase):
             rendered_content="This is test content",
             date_sent=timezone_now(),
             sending_client=self.sending_client,
+            is_channel_message=type == Recipient.STREAM,
         )
         message.set_topic_name("Test topic")
         message.save()

@@ -18,7 +18,40 @@ clients should check the `zulip_feature_level` field, present in the
 /register`](/api/register-queue) responses, to determine the API
 format used by the Zulip server that they are interacting with.
 
+## Changes in Zulip 12.0
+
+Feature levels 421-424 reserved for future use in 11.x maintenance
+releases.
+
 ## Changes in Zulip 11.0
+
+**Feature level 421**
+
+No changes; API feature level used for the Zulip 11.0 release.
+
+**Feature level 420**
+
+* [`POST /mobile_push/e2ee/test_notification`](/api/e2ee-test-notify):
+  Added a new endpoint to send an end-to-end encrypted test push notification
+  to the user's selected mobile device or all of their mobile devices.
+
+**Feature level 419**
+
+* [`POST /register`](/api/register-queue): Added `simplified_presence_events`
+  [client capability](/api/register-queue#parameter-client_capabilities),
+  which allows clients to specify whether they support receiving the
+  `presence` event type with user presence data in the modern API format.
+* [`GET /events`](/api/get-events): Added the `presences` field to the
+  `presence` event type for clients that support the `simplified_presence_events`
+  [client capability](/api/register-queue#parameter-client_capabilities).
+  The `presences` field will have the user presence data in the modern
+  API format. For clients that don't support that client capability the
+  event will contain fields with the legacy format for user presence data.
+
+**Feature level 418**
+
+* [`GET /events`](/api/get-events): An event with `type: "channel_folder"`
+  and `op: "reorder"` is sent when channel folders are reordered.
 
 **Feature level 417**
 
@@ -137,6 +170,9 @@ format used by the Zulip server that they are interacting with.
   `can_delete_own_message_group` parameter to support setting and
   changing the user group whose members can delete the messages they have sent
   in the channel.
+- [`POST /users/{user_id}/status`](/api/update-status-for-user): Added
+  new API endpoint for an administrator to update the status for
+  another user.
 
 **Feature level 406**
 

@@ -739,7 +739,7 @@ def create_channel(
     message_retention_days: Json[str] | Json[int] = RETENTION_DEFAULT,
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)],
     send_new_subscription_messages: Json[bool] = True,
-    subscribers: Json[list[str] | list[int]],
+    subscribers: Json[list[int]],
     topics_policy: Json[TopicsPolicy] = None,
 ) -> HttpResponse:
     realm = user_profile.realm
@@ -1323,8 +1323,10 @@ def delete_in_topic(
         if time.monotonic() >= start_time + 50:
             return json_success(request, data={"complete": False})
         with transaction.atomic(durable=True):
-            messages_to_delete = messages.order_by("-id")[0:batch_size].select_for_update(
-                of=("self",)
+            messages_to_delete = (
+                messages.select_related("recipient")
+                .order_by("-id")[0:batch_size]
+                .select_for_update(of=("self",))
             )
             if not messages_to_delete:
                 break

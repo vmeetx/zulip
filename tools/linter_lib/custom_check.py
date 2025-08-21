@@ -585,7 +585,7 @@ html_rules: list["Rule"] = [
             "web/templates/settings/playground_settings_admin.hbs",
         },
         "good_lines": [
-            '<input class="stream-list-filter" type="text" placeholder="{{ _(\'Filter streams\') }}" />'
+            '<input class="left-sidebar-search-input" type="text" placeholder="{{ _(\'Filter left sidebar\') }}" />'
         ],
         "bad_lines": ['<input placeholder="foo">'],
     },
@@ -611,7 +611,7 @@ html_rules: list["Rule"] = [
         "pattern": "placeholder='[^{]",
         "description": "`placeholder` value should be translatable.",
         "good_lines": [
-            '<input class="stream-list-filter" type="text" placeholder="{{ _(\'Filter streams\') }}" />'
+            '<input class="left-sidebar-search-input" type="text" placeholder="{{ _(\'Filter left sidebar\') }}" />'
         ],
         "bad_lines": ["<input placeholder='foo'>"],
         "exclude": {
@@ -979,6 +979,11 @@ svg_rules = RuleList(
             "pattern": r"fill=(['\"])(.*?)\1",
             "description": "System icons ignore fill values, so do not include the fill property.",
             "include_only": {"web/shared/icons/", "web/images/icons/"},
+            # This file needs the fill property to define the fill as
+            # a linear gradient. We cannot define the gradient in CSS
+            # in a clean way and thus we have decided to define the
+            # gradient in the SVG itself.
+            "exclude": {"web/shared/icons/user-circle-idle.svg"},
         },
         {
             "pattern": "fill:",

@@ -384,6 +384,9 @@
     /* Legacy values */
     --legacy-body-line-height-unitless: calc(20 / 14);
 
+    /* Special effects */
+    --pulse-unread-scale-max: 1.5;
+
     /* Message area */
     /* In the legacy layout at 16px/1em density, 918.6px is
        the widest the message area gets, so we preserve this
@@ -816,6 +819,18 @@
         hsl(0deg 0% 90%),
         hsl(0deg 0% 91% / 10%)
     );
+    --color-modal-selectable-icon: light-dark(
+        hsl(240deg 30% 40%),
+        hsl(240deg 35% 68%)
+    );
+    --color-modal-selectable-icon-hover: light-dark(
+        hsl(240deg 100% 15%),
+        hsl(240deg 100% 90%)
+    );
+    --background-color-modal-selectable-icon-hover: light-dark(
+        hsl(240deg 100% 50% / 7%),
+        hsl(240deg 100% 75% / 20%)
+    );
     --color-background-pill-container-without-placeholder: light-dark(
         hsl(0deg 0% 100%),
         hsl(0deg 0% 0% / 20%)
@@ -915,11 +930,11 @@
     /* When unreads are hovered on the condensed
        views, they should not have an alpha.
        The first color corresponds to
-       --color-background-unread-counter-prominent.
+       --color-background-unread-counter-normal.
        The second color aligns with light mode's
        --color-background. */
     --color-background-unread-counter-no-alpha: light-dark(
-        color-mix(in srgb, hsl(240deg 10% 50%) 70%, hsl(0deg 0% 94%)),
+        color-mix(in srgb, hsl(240deg 10% 50%) 20%, hsl(0deg 0% 94%)),
         color-mix(in srgb, hsl(240deg 10% 50%) 35%, hsl(0deg 0% 11%))
     );
     --color-background-unread-counter-dot: light-dark(
@@ -1623,6 +1638,12 @@
         #646671
     );
     --color-user-circle-deactivated: hsl(0deg 0% 50%);
+    /* The gradient is also recreated inside the `user-circle-idle` SVG
+       file. That is needed for the new help center since it does not
+       do the SVG to font conversion that the web app does. We
+       re-apply it here since the linearGradient there is stripped off
+       when that SVG is converted to font for the web app. Any changes
+       to this gradient should be reflected in the SVG file as well. */
     --gradient-user-circle-idle: linear-gradient(
         to right,
         var(--color-user-circle-idle) 5%,

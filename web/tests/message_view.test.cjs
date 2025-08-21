@@ -2,6 +2,7 @@
 
 const assert = require("node:assert/strict");
 
+const {make_user_group} = require("./lib/example_group.cjs");
 const {mock_esm, zrequire, set_global} = require("./lib/namespace.cjs");
 const {run_test, noop} = require("./lib/test.cjs");
 const blueslip = require("./lib/zblueslip.cjs");
@@ -96,20 +97,20 @@ const bot = {
     is_bot: true,
 };
 
-const nobody = {
+const nobody = make_user_group({
     name: "role:nobody",
     id: 1,
     members: new Set([]),
     is_system_group: true,
     direct_subgroup_ids: new Set([]),
-};
-const everyone = {
+});
+const everyone = make_user_group({
     name: "role:everyone",
     id: 2,
     members: new Set([5]),
     is_system_group: true,
     direct_subgroup_ids: new Set([]),
-};
+});
 
 user_groups.initialize({realm_user_groups: [nobody, everyone]});
 
@@ -390,7 +391,7 @@ run_test("show_empty_narrow_message", ({mock_template, override}) => {
     override(realm, "realm_direct_message_permission_group", nobody.id);
 
     // prioritize information about invalid user(s) in narrow/search
-    current_filter = set_filter([["dm", ["Yo"]]]);
+    current_filter = set_filter([["dm", "Yo"]]);
     narrow_banner.show_empty_narrow_message(current_filter);
     assert.equal(
         $(".empty_feed_notice_main").html(),
@@ -398,7 +399,7 @@ run_test("show_empty_narrow_message", ({mock_template, override}) => {
     );
 
     people.add_active_user(alice);
-    current_filter = set_filter([["dm", ["alice@example.com", "Yo"]]]);
+    current_filter = set_filter([["dm", "alice@example.com,Yo"]]);
     narrow_banner.show_empty_narrow_message(current_filter);
     assert.equal(
         $(".empty_feed_notice_main").html(),
@@ -499,7 +500,7 @@ run_test("show_empty_narrow_message", ({mock_template, override}) => {
     override(realm, "realm_direct_message_permission_group", nobody.id);
 
     // prioritize information about invalid user in narrow/search
-    current_filter = set_filter([["dm-including", ["Yo"]]]);
+    current_filter = set_filter([["dm-including", "Yo"]]);
     narrow_banner.show_empty_narrow_message(current_filter);
     assert.equal(
         $(".empty_feed_notice_main").html(),
