@@ -347,7 +347,7 @@ def get_image_path(
 
 
 class HubotIntegration(Integration):
-    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-      {}"
+    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-{}"
     SECONDARY_LINE_TEXT = "(Hubot script)"
     DOC_PATH = "zerver/integrations/hubot_common.md"
 
@@ -569,7 +569,6 @@ WEBHOOK_INTEGRATIONS: list[WebhookIntegration] = [
     WebhookIntegration("statuspage", ["customer-support"]),
     WebhookIntegration("stripe", ["financial"]),
     WebhookIntegration("taiga", ["project-management"]),
-     WebhookIntegration("redmine", ["project-management"]),
     WebhookIntegration("teamcity", ["continuous-integration"]),
     WebhookIntegration("thinkst", ["monitoring"]),
     WebhookIntegration("transifex", ["misc"]),
@@ -582,6 +581,16 @@ WEBHOOK_INTEGRATIONS: list[WebhookIntegration] = [
     WebhookIntegration("zapier", ["meta-integration"]),
     WebhookIntegration("zendesk", ["customer-support"]),
     WebhookIntegration("zabbix", ["monitoring"]),
+    # Add the new Redmine webhook integration
+    WebhookIntegration(
+        "redmine",
+        ["project-management"],
+        display_name="Redmine",
+        url_options=[
+            WebhookUrlOption.build_preset_config(PresetUrlOption.STREAM),
+            WebhookUrlOption.build_preset_config(PresetUrlOption.TOPIC),
+        ],
+    ),
 ]
 
 INTEGRATIONS: dict[str, Integration] = {
@@ -604,7 +613,7 @@ INTEGRATIONS: dict[str, Integration] = {
     "notion": Integration("notion", ["productivity"]),
     "onyx": Integration("onyx", ["productivity"], logo="images/integrations/logos/onyx.png"),
     "puppet": Integration("puppet", ["deployment"]),
-    # "redmine": Integration("redmine", ["project-management"]), removed legacy plugin 
+    # Removed the old Redmine plugin integration entry
     "zoom": Integration("zoom", ["communication"]),
 }
 
@@ -717,8 +726,6 @@ WEBHOOK_SCREENSHOT_CONFIG: dict[str, list[WebhookScreenshotConfig]] = {
             "git_multiple.json", use_basic_auth=True, payload_as_query_param=True
         )
     ],
-    # sample payload
-    "redmine": [WebhookScreenshotConfig("issue_created.json")],
     # 'beeminder': [WebhookScreenshotConfig('derail_worried.json')],
     "bitbucket": [
         WebhookScreenshotConfig(
@@ -846,6 +853,8 @@ WEBHOOK_SCREENSHOT_CONFIG: dict[str, list[WebhookScreenshotConfig]] = {
             },
         )
     ],
+    # Add Redmine screenshot config
+    "redmine": [WebhookScreenshotConfig("issue_created.json")],
 }
 
 FIXTURELESS_SCREENSHOT_CONFIG: dict[str, list[FixturelessScreenshotConfig]] = {}
@@ -867,3 +876,12 @@ def get_all_event_types_for_integration(integration: Integration) -> list[str] |
         if hasattr(function, "_all_event_types"):
             return function._all_event_types
     return None
+
+
+# Self note: still an exploratory commit, these are some must adds  
+# 1) Need to check with suer/redmine_webhook payload (unique fields that zulip could expose)
+# 2) Mapping all old plugin events to new webhook payload, creating a gap analysis table
+# 3) Screenshot fixature needs to be dealt via capturing real webhook from redmine test server
+# 4) view.py, tests.py, docs.md to be completed by 30-08-2025
+
+# Payload analysis, template mapping, handler implementation and testing incomplete
