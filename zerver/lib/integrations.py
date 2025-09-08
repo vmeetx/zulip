@@ -1,3 +1,5 @@
+# zerver/lib/integrations.py
+
 import os
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
@@ -347,7 +349,7 @@ def get_image_path(
 
 
 class HubotIntegration(Integration):
-    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-{}"
+    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-  {}"
     SECONDARY_LINE_TEXT = "(Hubot script)"
     DOC_PATH = "zerver/integrations/hubot_common.md"
 
@@ -581,16 +583,12 @@ WEBHOOK_INTEGRATIONS: list[WebhookIntegration] = [
     WebhookIntegration("zapier", ["meta-integration"]),
     WebhookIntegration("zendesk", ["customer-support"]),
     WebhookIntegration("zabbix", ["monitoring"]),
-    # Add the new Redmine webhook integration
     WebhookIntegration(
         "redmine",
         ["project-management"],
         display_name="Redmine",
-        url_options=[
-            WebhookUrlOption.build_preset_config(PresetUrlOption.STREAM),
-            WebhookUrlOption.build_preset_config(PresetUrlOption.TOPIC),
-        ],
     ),
+   
 ]
 
 INTEGRATIONS: dict[str, Integration] = {
@@ -878,10 +876,3 @@ def get_all_event_types_for_integration(integration: Integration) -> list[str] |
     return None
 
 
-# Self note: still an exploratory commit, these are some must adds  
-# 1) Need to check with suer/redmine_webhook payload (unique fields that zulip could expose)
-# 2) Mapping all old plugin events to new webhook payload, creating a gap analysis table
-# 3) Screenshot fixature needs to be dealt via capturing real webhook from redmine test server
-# 4) view.py, tests.py, docs.md to be completed by 30-08-2025
-
-# Payload analysis, template mapping, handler implementation and testing incomplete
