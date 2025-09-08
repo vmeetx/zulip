@@ -1,5 +1,3 @@
-# zerver/lib/integrations.py
-
 import os
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
@@ -349,7 +347,7 @@ def get_image_path(
 
 
 class HubotIntegration(Integration):
-    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-  {}"
+    GIT_URL_TEMPLATE = "https://github.com/hubot-archive/hubot-{}"
     SECONDARY_LINE_TEXT = "(Hubot script)"
     DOC_PATH = "zerver/integrations/hubot_common.md"
 
